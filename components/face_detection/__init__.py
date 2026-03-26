@@ -202,16 +202,6 @@ async def to_code(config):
         if os.path.exists(inc_path):
             cg.add_build_flag(f"-I{inc_path}")
 
-    # Also add PlatformIO libdeps paths (for HA/Docker builds)
-    build_path = CORE.build_path
-    pioenv = CORE.name
-    esp_dl_candidates = [
-        os.path.join(str(build_path), ".piolibdeps", pioenv, "esp-dl"),
-        os.path.join(str(build_path), ".piolibdeps", pioenv, "esp-dl", "esp-dl"),
-    ]
-    for esp_dl_base in esp_dl_candidates:
-        for subdir in esp_dl_include_subdirs:
-            cg.add_build_flag(f"-I{esp_dl_base}/{subdir}")
 
     # Build script for compiling ESP-DL sources and embedding models
     build_script_path = os.path.join(component_dir, "face_detection_build.py")
