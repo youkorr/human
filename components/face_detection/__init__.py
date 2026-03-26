@@ -2,7 +2,6 @@ import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome.const import CONF_ID
 from esphome import automation
-from esphome.core import CORE
 import os
 
 DEPENDENCIES = ["esp_cam_sensor"]
@@ -160,7 +159,7 @@ async def to_code(config):
     human_face_recognition_dir = os.path.join(parent_components_dir, "human_face_recognition")
     if os.path.exists(human_face_recognition_dir):
         cg.add_build_flag(f"-I{human_face_recognition_dir}")
-
+        
     # ESP-DL: download via PlatformIO lib_deps
     cg.add_library("esp-dl", None, "https://github.com/espressif/esp-dl.git#v3.2.3")
 
@@ -168,46 +167,44 @@ async def to_code(config):
     # Our build script manually compiles only the esp-dl sources we need.
     cg.add_platformio_option("lib_ignore", ["esp-dl"])
 
-    # Add ESP-DL include paths (try local and PlatformIO locations)
-    esp_dl_include_subdirs = [
-        "dl",
-        "dl/tool/include",
-        "dl/tool/isa/esp32p4",
-        "dl/tool/src",
-        "dl/tensor/include",
-        "dl/tensor/src",
-        "dl/base",
-        "dl/base/isa",
-        "dl/base/isa/esp32p4",
-        "dl/math/include",
-        "dl/math/src",
-        "dl/model/include",
-        "dl/model/src",
-        "dl/module/include",
-        "dl/module/src",
-        "fbs_loader/include",
-        "fbs_loader/lib/esp32p4",
-        "fbs_loader/src",
-        "vision/detect",
-        "vision/image",
-        "vision/image/isa",
-        "vision/image/isa/esp32p4",
-        "vision/recognition",
-        "vision/classification",
-    ]
+    # Add ESP-DL include paths
+    esp_dl_dir = os.path.join(parent_components_dir, "esp-dl")
+    if os.path.exists(esp_dl_dir):
+        esp_dl_includes = [
+            "dl",
+            "dl/tool/include",
+            "dl/tool/isa/esp32p4",
+            "dl/tool/src",
+            "dl/tensor/include",
+            "dl/tensor/src",
+            "dl/base",
+            "dl/base/isa",
+            "dl/base/isa/esp32p4",
+            "dl/math/include",
+            "dl/math/src",
+            "dl/model/include",
+            "dl/model/src",
+            "dl/module/include",
+            "dl/module/src",
+            "fbs_loader/include",
+            "fbs_loader/lib/esp32p4",
+            "fbs_loader/src",
+            "vision/detect",
+            "vision/image",
+            "vision/image/isa",
+            "vision/image/isa/esp32p4",
+            "vision/recognition",
+            "vision/classification",
+        ]
+        for inc in esp_dl_includes:
+            inc_path = os.path.join(esp_dl_dir, inc)
+            if os.path.exists(inc_path):
+                cg.add_build_flag(f"-I{inc_path}")
 
-    # Try local components/esp-dl/ first
-    for inc in esp_dl_includes:
-        inc_path = os.path.join(esp_dl_dir, inc)
-        if os.path.exists(inc_path):
-            cg.add_build_flag(f"-I{inc_path}")
-
-
-    # Build script for compiling ESP-DL sources and embedding models
+    # Add build script for compiling ESP-DL sources and embedding models
     build_script_path = os.path.join(component_dir, "face_detection_build.py")
     if os.path.exists(build_script_path):
         cg.add_platformio_option("extra_scripts", [f"post:{build_script_path}"])
-
 
 
 # Action schemas
