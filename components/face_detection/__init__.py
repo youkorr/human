@@ -219,6 +219,7 @@ async def to_code(config):
         cg.add_platformio_option("extra_scripts", [f"post:{build_script_path}"])
 
 
+
 # Action schemas
 CONF_NAME = "name"
 CONF_FACE_ID = "face_id"
