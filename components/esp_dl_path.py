@@ -187,31 +187,15 @@ def get_esp_dl_include_dirs(esp_dl_dir, isa_target="esp32p4"):
         List of existing include directory paths
     """
     dirs = [
-        "dl",
-        "dl/tool/include",
-        "dl/tool/isa/esp32p4",
-        "dl/tool/src",
-        "dl/tensor/include",
-        "dl/tensor/src",
-        "dl/base",
-        "dl/base/isa",
-        "dl/base/isa/esp32p4",
-        "dl/math/include",
-        "dl/math/src",
-        "dl/model/include",
-        "dl/model/src",
-        "dl/module/include",
-        "dl/module/src",
-        "fbs_loader/include",
-        "fbs_loader/lib/esp32p4",
-        "fbs_loader/src",
-        "vision/detect",
-        "vision/image",
-        "vision/image/isa",
-        "vision/image/isa/esp32p4",
-        "vision/recognition",
+        "dl", "dl/tool/include", f"dl/tool/isa/{isa_target}",
+        "dl/tool/src", "dl/tensor/include", "dl/tensor/src",
+        "dl/base", "dl/base/isa", f"dl/base/isa/{isa_target}",
+        "dl/math/include", "dl/math/src", "dl/model/include",
+        "dl/model/src", "dl/module/include", "dl/module/src",
+        "fbs_loader/include", f"fbs_loader/lib/{isa_target}", "fbs_loader/src",
+        "vision/detect", "vision/image", "vision/image/isa",
+        f"vision/image/isa/{isa_target}", "vision/recognition",
         "vision/classification",
-        
     ]
 
     result = []
