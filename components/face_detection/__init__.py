@@ -170,24 +170,37 @@ async def to_code(config):
 
     # Add ESP-DL include paths (try local and PlatformIO locations)
     esp_dl_include_subdirs = [
-        "dl", "dl/tool/include", "dl/tool/isa/esp32p4",
-        "dl/tool/src", "dl/tensor/include", "dl/tensor/src",
-        "dl/base", "dl/base/isa", "dl/base/isa/esp32p4",
-        "dl/math/include", "dl/math/src", "dl/model/include",
-        "dl/model/src", "dl/module/include", "dl/module/src",
-        "fbs_loader/include", "fbs_loader/lib/esp32p4", "fbs_loader/src",
-        "vision/detect", "vision/image", "vision/image/isa",
-        "vision/image/isa/esp32p4", "vision/recognition",
+        "dl",
+        "dl/tool/include",
+        "dl/tool/isa/esp32p4",
+        "dl/tool/src",
+        "dl/tensor/include",
+        "dl/tensor/src",
+        "dl/base",
+        "dl/base/isa",
+        "dl/base/isa/esp32p4",
+        "dl/math/include",
+        "dl/math/src",
+        "dl/model/include",
+        "dl/model/src",
+        "dl/module/include",
+        "dl/module/src",
+        "fbs_loader/include",
+        "fbs_loader/lib/esp32p4",
+        "fbs_loader/src",
+        "vision/detect",
+        "vision/image",
+        "vision/image/isa",
+        "vision/image/isa/esp32p4",
+        "vision/recognition",
         "vision/classification",
     ]
 
     # Try local components/esp-dl/ first
-    esp_dl_dir = os.path.join(parent_components_dir, "esp-dl")
-    if os.path.exists(esp_dl_dir):
-        for subdir in esp_dl_include_subdirs:
-            inc_path = os.path.join(esp_dl_dir, subdir)
-            if os.path.exists(inc_path):
-                cg.add_build_flag(f"-I{inc_path}")
+    for inc in esp_dl_includes:
+        inc_path = os.path.join(esp_dl_dir, inc)
+        if os.path.exists(inc_path):
+            cg.add_build_flag(f"-I{inc_path}")
 
     # Also add PlatformIO libdeps paths (for HA/Docker builds)
     build_path = CORE.build_path
